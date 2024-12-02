@@ -1,4 +1,4 @@
-module github.com/Battle-Bunker/CyphidSnake-Starter
+module github.com/Battle-Bunker/MyCyphidSnake
 
 go 1.21.10
 
