@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/Battle-Bunker/MyCyphidSnake/heuristics"
 	"github.com/Battle-Bunker/cyphid-snake/agent"
 	"github.com/Battle-Bunker/cyphid-snake/server"
 	"github.com/BattlesnakeOfficial/rules/client"
@@ -18,8 +17,8 @@ func main() {
 	}
 
 	portfolio := agent.NewPortfolio(
-		agent.NewHeuristic(1.0, "health", heuristics.Health),
-		agent.NewHeuristic(1.0, "food", heuristics.Food),
+		agent.NewHeuristic(1.0, "health", HeuristicHealth),
+		agent.NewHeuristic(1.0, "food", HeuristicFood),
 	)
 
 	snakeAgent := agent.NewSnakeAgent(portfolio, metadata)

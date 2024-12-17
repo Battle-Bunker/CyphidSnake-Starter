@@ -1,3 +1,4 @@
+
 # AI CONTEXT
 
 ## Project Overview
@@ -44,9 +45,7 @@ If you are asked to write a heuristic function that seems to you to recommend a 
 A good heuristic function should be simple and elegant and address one dimension of value at a time. If the user suggests incorporating many dimensions of value into a single heuristic function you should suggest that they break it up into multiple heuristic functions.
 
 ### Recommending Code Location
-When asked to write heuristic functions, always recommend a filename for the code to go in using the schema heuristics/<name>.go for a heuristic function called <Name>.
-
-If asked to write a library function or if you find yourself wanting to write a helper function for any task that is likely to have general utility, recommend adding it to an appropriately named file in the lib folder and explain how to import that function from the lib package.
+When asked to write heuristic functions, always recommend a filename for the code to go in using the schema heuristic_<name>.go for a heuristic function called Heuristic<Name>.
 
 ## Available Interfaces
 
@@ -69,6 +68,7 @@ type GameSnapshot interface {
     Opponents() []SnakeSnapshot
     AllSnakes() []SnakeSnapshot
     DeadSnakes() []SnakeSnapshot
+    Board() *Board
     ApplyMoves(moves []rules.SnakeMove) (GameSnapshot, error)
 }
 
@@ -81,22 +81,44 @@ type SnakeSnapshot interface {
     Head() rules.Point
     Length() int
     LastShout() string
-    ForwardMoves() []rules.SnakeMove
+    ConsideredMoves() []rules.SnakeMove
 }
+
+type Cell interface {
+    Kind() CellKind
+    IsPassable() bool
+    Coordinates() rules.Point
+    Neighbours(board *Board) []Cell
+    PassableNeighbours(board *Board) []Cell
+}
+
+type Board struct {
+    Width, Height int
+    Cells [][]Cell
+}
+
+type CellKind int
+
+const (
+    CellEmpty CellKind = iota
+    CellFood
+    CellSnakeHead
+    CellSnakeBody
+    CellSnakeTail
+)
 ```
-h
+
 ## Imports Guide
 
-When implementing your heuristic function, import only the packages you directly use. The `agent` package provides the core interfaces (`GameSnapshot`, `_SnakeSnapshot_`), and the `rules` package provides supporting types like `Point`. For example:
+When implementing your heuristic function, import only the packages you directly use. The `agent` package provides the core interfaces (`GameSnapshot`, `SnakeSnapshot`, `Cell`, `Board`), and the `rules` package provides supporting types like `Point`. For example:
 
 ```go
-package heuristics
+package main
 
 import (
     "github.com/Battle-Bunker/cyphid-snake/agent"  // Import if using GameSnapshot or SnakeSnapshot
     "github.com/BattlesnakeOfficial/rules"        // Import if using Point or other rules types
-    "github.com/Battle-Bunker/MyCyphidSnake/lib"   // Import if using local helper functions from lib package
 )
 ```
 
-Only include imports that your code actually references. The compiler will help ensure you have the correct imports.__
+Only include imports that your code actually references. The compiler will help ensure you have the correct imports.
